@@ -1,32 +1,9 @@
-from flask import Flask, render_template, request
-import os
+import streamlit as st
 
-app = Flask(__name__)
+st.title("AI Resume Screening System")
 
-UPLOAD_FOLDER = "uploads"
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+uploaded_file = st.file_uploader("Upload Resume", type=["pdf", "docx"])
 
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-@app.route("/upload", methods=["POST"])
-def upload_resume():
-    if "resume" not in request.files:
-        return "No file selected"
-
-    file = request.files["resume"]
-
-    if file.filename == "":
-        return "No file selected"
-
-    file.save(os.path.join(app.config["UPLOAD_FOLDER"], file.filename))
-
-    return render_template(
-        "result.html",
-        filename=file.filename,
-        score="85%"
-    )
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if uploaded_file is not None:
+    st.success(f"Uploaded: {uploaded_file.name}")
+    st.write("Resume Score: 85%")
